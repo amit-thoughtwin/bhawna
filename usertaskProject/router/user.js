@@ -2,12 +2,10 @@ const {
   creatuser,
   insertuser,
   login,
-  insertTask,
-  updatetask,
-  getTask,
-  deleteTask,
+  
   getUser,
   getUserTask,
+  me
 } = require("../controller/user");
 const { tokenverify } = require("../function/tokenverify");
 const express = require("express");
@@ -35,30 +33,6 @@ const router = express.Router();
  *
  */
 
-/**
- * @swagger
- * components:
- *      schemas:
- *          Task:
- *              type: object
- *              required :
- *                  - name
- *                  - dec
- *              properties:
- *                  id:
- *                      type: intiger
- *                  name:
- *                      type: string
- *                  dec:
- *                      type: string
- *                  user_id:
- *                       type: intiger 
- *              example:
- *                  id: 1
- *                  name: Task name
- *                  dec: about task
- *                  user_id: user Id
- */
 
  router.get("/users/User", creatuser);
 
@@ -98,7 +72,7 @@ router.post("/users/User", insertuser);
  *             $ref: '#/components/schemas/User'
  *      
  *     responses:
- * 
+ *         
  *         content:
  *           application/json:
  *             schema:
@@ -106,34 +80,6 @@ router.post("/users/User", insertuser);
  
  */ 
 router.post("/users/login", login);
-/**
- * @swagger
-/users/insertTask:
- *  post:
- *      summary: test authorization
- *      tags: [Task]
- *      parameters:
- *          - in: header
- *            name: token
- *            schema:
- *      
- *              required: true
- *              description: use to test authorization JWT
- *      requestBody:
- *         required: true
- *         content:
- *                     application/json:
- *                      schema:
- *                         $ref: '#/components/schemas/Task'
- *      responses:
- *          '200':  
- *              description: success
- *          '500':
- *                  description: Internal server error
- */
-router.post("/users/insertTask", tokenverify, insertTask);
-router.post("/users/updatetask/:id", tokenverify, updatetask);
-router.get("/users/getTask", getTask);
 
 /**
  * @swagger
@@ -151,29 +97,26 @@ router.get("/users/getTask", getTask);
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get("/users/getUser", getUser);
+router.get("/users/getUser", getUser)
+
 
 router.get("/users/getUSerTask", tokenverify, getUserTask);
+
 /**
  * @swagger
- * /users/deleteTask/{id}:
- *    get:
- *      summary: delete Task
- *      tags: [Task]
- *      parameters:
- *          - in: path
- *            name: id
- *            schema:
- *              type: string
- *              required: true
- *              description: this is the id for Task
- *    
- *      responses:
+ *  /users/me:
+ *   get:
+ *     summary: Returns  User record
+ *     tags: [User]
+ *     responses:
  *       200:
- *         description: The Task delete
+ *         description: The record of the User
  *         content:
  *           application/json:
- *             
+ *               schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
  */
-router.get("/users/deleteTask/:id", deleteTask);
+router.get("/users/me", tokenverify, me);
 module.exports = router;
